@@ -1,17 +1,15 @@
 import { Button, Container, TextField, Typography } from "@mui/material";
 import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import routes from "../utils/routes";
+import { useLogin } from "../utils/hooks/API/useLogin";
 
 export const LoginPage: FC = () => {
   const [username, setUsername] = useState<string>("");
-  localStorage.removeItem("token");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate();
-  const handleSubmit = () => {
-    console.log("Submit");
-    localStorage.setItem("token", "token");
-    navigate(routes.tablePagePath());
+  const { login } = useLogin();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(JSON.stringify({ username, password }));
+    login({ username, password });
   };
   return (
     <Container>
