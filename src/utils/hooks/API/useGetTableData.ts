@@ -2,6 +2,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import routes from "../../routes";
 import { commonHeadersWithToken } from "../../../constants/HeadersAPI";
+import { TableLinesResponse } from "../../../types/types";
 
 export const useGetTableData = () => {
   const {
@@ -10,7 +11,11 @@ export const useGetTableData = () => {
     isSuccess: isLinesReceived,
   } = useQuery({
     queryKey: ["allLines"],
-    queryFn: () => axios.get(routes.getAllDataPath(), commonHeadersWithToken()),
+    queryFn: () =>
+      axios.get<TableLinesResponse>(
+        routes.getAllDataPath(),
+        commonHeadersWithToken()
+      ),
     select: ({ data }) => data.data,
   });
   return {
