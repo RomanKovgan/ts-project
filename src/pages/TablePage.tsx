@@ -15,18 +15,29 @@ import { TableLine } from "../types/types";
 import { useState } from "react";
 import { format } from "date-fns";
 import LineModal from "../components/Modal/LineModal";
+import { useCreateLine } from "../utils/hooks/API/useCreateLine";
+import { useDeleteLine } from "../utils/hooks/API/useDeleteLine";
+import { useUpdateLine } from "../utils/hooks/API/useUpdateLine";
+import Header from "../components/Header";
 
 const TablePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [editLine, setEditLine] = useState<TableLine | null>(null);
   const { lines } = useGetTableData();
-
-  const handleDelete = (id: string) => {
-    console.log(id);
-  };
+  const { createLine } = useCreateLine(setOpenModal);
+  const { deleteLine } = useDeleteLine();
+  const { updateLine } = useUpdateLine(setEditLine);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      <Header />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -66,10 +77,14 @@ const TablePage = () => {
                 </TableCell>
                 <TableCell>{line.employeeSignatureName}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => setEditLine(line)}>
+                  <IconButton
+                    onClick={() => {
+                      setEditLine(line);
+                    }}
+                  >
                     <Edit />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(line.id)}>
+                  <IconButton onClick={() => deleteLine(line.id)}>
                     <Delete />
                   </IconButton>
                 </TableCell>
@@ -83,6 +98,8 @@ const TablePage = () => {
         setEditLine={setEditLine}
         setOpenModal={setOpenModal}
         editLine={editLine}
+        createLine={createLine}
+        updateLine={updateLine}
       />
     </div>
   );
