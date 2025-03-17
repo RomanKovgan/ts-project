@@ -22,7 +22,6 @@ export const useLogin = () => {
       return axios.post(API, JSON.stringify(data), commonHeaders());
     },
     onSuccess(res) {
-      console.log(res.data);
       localStorage.setItem("token", res.data.data.token);
       navigate(routes.tablePagePath());
     },

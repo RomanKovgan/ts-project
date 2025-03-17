@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -11,12 +11,15 @@ import { TableLine } from "../../types/types";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { lineSchema } from "../../utils/schemas/lineValidationSchema";
+import { formatDate } from "../../utils/formatDateISO";
 
 export type LineModalProps = {
   openModal: boolean;
   editLine: TableLine | null;
   setOpenModal: (value: boolean) => void;
   setEditLine: (value: TableLine | null) => void;
+  createLine: (value: Omit<TableLine, "id">) => void;
+  updateLine: (value: TableLine) => void;
 };
 
 const LineModal: FC<LineModalProps> = ({
@@ -24,6 +27,8 @@ const LineModal: FC<LineModalProps> = ({
   editLine,
   setOpenModal,
   setEditLine,
+  createLine,
+  updateLine,
 }) => {
   const {
     control,
@@ -44,21 +49,46 @@ const LineModal: FC<LineModalProps> = ({
     },
   });
 
-  const onSubmit = (data: Omit<TableLine, "id">) => {
-    console.log(data);
+  useEffect(() => {
     if (editLine) {
-      handleUpdate({ ...editLine, ...data });
+      reset({
+        companySigDate: formatDate(editLine.companySigDate),
+        companySignatureName: editLine.companySignatureName,
+        documentName: editLine.documentName,
+        documentStatus: editLine.documentStatus,
+        documentType: editLine.documentType,
+        employeeNumber: editLine.employeeNumber,
+        employeeSigDate: formatDate(editLine.employeeSigDate),
+        employeeSignatureName: editLine.employeeSignatureName,
+      });
+    } else {
+      reset({
+        companySigDate: "",
+        companySignatureName: "",
+        documentName: "",
+        documentStatus: "",
+        documentType: "",
+        employeeNumber: "",
+        employeeSigDate: "",
+        employeeSignatureName: "",
+      });
+    }
+  }, [editLine, reset]);
+
+  const onSubmit = (data: Omit<TableLine, "id">) => {
+    if (editLine) {
+      handleUpdate({ ...data, id: editLine.id });
     } else {
       handleCreate(data);
     }
   };
 
   const handleCreate = (data: Omit<TableLine, "id">) => {
-    console.log(data);
+    createLine(data);
   };
 
   const handleUpdate = (data: TableLine) => {
-    console.log(data);
+    updateLine(data);
   };
 
   return (
@@ -84,11 +114,16 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="companySigDate"
               control={control}
-              defaultValue={editLine?.companySigDate || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Дата"
+                  label="Дата подписи компании"
+                  type="date"
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
                   fullWidth
                   margin="normal"
                   error={!!errors.companySigDate}
@@ -99,7 +134,6 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="companySignatureName"
               control={control}
-              defaultValue={editLine?.companySignatureName || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -114,7 +148,6 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="documentName"
               control={control}
-              defaultValue={editLine?.documentName || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -129,7 +162,6 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="documentStatus"
               control={control}
-              defaultValue={editLine?.documentStatus || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -144,7 +176,6 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="documentType"
               control={control}
-              defaultValue={editLine?.documentType || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -159,7 +190,6 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="employeeNumber"
               control={control}
-              defaultValue={editLine?.employeeNumber || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -174,13 +204,18 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="employeeSigDate"
               control={control}
-              defaultValue={editLine?.employeeSigDate || ""}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Дата сотрудника"
+                  label="Дата подписи сотрудника"
+                  type="date"
                   fullWidth
                   margin="normal"
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
                   error={!!errors.employeeSigDate}
                   helperText={errors.employeeSigDate?.message}
                 />
@@ -189,7 +224,6 @@ const LineModal: FC<LineModalProps> = ({
             <Controller
               name="employeeSignatureName"
               control={control}
-              defaultValue={editLine?.employeeSignatureName || ""}
               render={({ field }) => (
                 <TextField
                   {...field}

@@ -4,20 +4,22 @@ import routes from "../../routes";
 import { commonHeadersWithToken } from "../../../constants/HeadersAPI";
 import { TableLine } from "../../../types/types";
 
-export const useCreateLine = (setOpenModal: (value: boolean) => void) => {
+export const useUpdateLine = (
+  setEditLine: (value: TableLine | null) => void
+) => {
   const queryClient = useQueryClient();
-  const { mutate: createLine, isPending: isLoadingCreatedLines } = useMutation({
-    mutationFn: (data: Omit<TableLine, "id">) => {
+  const { mutate: updateLine } = useMutation({
+    mutationFn: ({ id, ...rest }: TableLine) => {
       return axios.post(
-        routes.createLinePath(),
-        data,
+        routes.updateLinePath(id),
+        rest,
         commonHeadersWithToken()
       );
     },
     onSuccess: () =>
       queryClient
         .invalidateQueries({ queryKey: ["allLines"] })
-        .then(() => setOpenModal(false)),
+        .then(() => setEditLine(null)),
   });
-  return { createLine, isLoadingCreatedLines };
+  return { updateLine };
 };
