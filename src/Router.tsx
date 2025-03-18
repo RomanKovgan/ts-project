@@ -7,7 +7,7 @@ import routes from "./utils/routes";
 
 export const Router: FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ts-project">
       <Routes>
         <Route path={"/login"} element={<LoginPage />} />
         <Route element={<PrivateOutlet />}>
