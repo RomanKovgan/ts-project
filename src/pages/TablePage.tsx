@@ -19,6 +19,7 @@ import { useCreateLine } from "../utils/hooks/API/useCreateLine";
 import { useDeleteLine } from "../utils/hooks/API/useDeleteLine";
 import { useUpdateLine } from "../utils/hooks/API/useUpdateLine";
 import Header from "../components/Header";
+import { useTranslation } from "react-i18next";
 
 const TablePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -27,6 +28,7 @@ const TablePage = () => {
   const { createLine } = useCreateLine(setOpenModal);
   const { deleteLine } = useDeleteLine();
   const { updateLine } = useUpdateLine(setEditLine);
+  const { t } = useTranslation();
 
   return (
     <div
@@ -42,21 +44,21 @@ const TablePage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Дата</TableCell>
-              <TableCell>Наименование </TableCell>
-              <TableCell>Название документа</TableCell>
-              <TableCell>Статус документа</TableCell>
-              <TableCell>Тип документа</TableCell>
-              <TableCell>Номер сотрудника</TableCell>
-              <TableCell>Дата сотрудника</TableCell>
-              <TableCell>Название документа</TableCell>
+              <TableCell>{t("table.companySigDate")}</TableCell>
+              <TableCell>{t("table.companySignatureName")}</TableCell>
+              <TableCell>{t("table.documentName")}</TableCell>
+              <TableCell>{t("table.documentStatus")}</TableCell>
+              <TableCell>{t("table.documentType")}</TableCell>
+              <TableCell>{t("table.employeeNumber")}</TableCell>
+              <TableCell>{t("table.employeeSigDate")}</TableCell>
+              <TableCell>{t("table.employeeSignatureName")}</TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => setOpenModal(true)}
                 >
-                  Добавить
+                  {t("table.add")}
                 </Button>
               </TableCell>
             </TableRow>

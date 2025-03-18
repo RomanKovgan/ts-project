@@ -1,11 +1,13 @@
 import { Button, Container, TextField, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import { useLogin } from "../utils/hooks/API/useLogin";
+import { useTranslation } from "react-i18next";
 
 export const LoginPage: FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { login } = useLogin();
+  const { t } = useTranslation();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(JSON.stringify({ username, password }));
@@ -13,23 +15,23 @@ export const LoginPage: FC = () => {
   };
   return (
     <Container>
-      <Typography variant="h4">Вход</Typography>
+      <Typography variant="h4">{t("login.login")}</Typography>
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Имя пользователя"
+          label={t("login.username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           fullWidth
           margin="normal"
         />
         <TextField
-          label="Пароль"
+          label={t("login.password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           fullWidth
           margin="normal"
         />
-        <Button type="submit">Войти</Button>
+        <Button type="submit">{t("login.login")}</Button>
       </form>
     </Container>
   );

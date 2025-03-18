@@ -12,6 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { lineSchema } from "../../utils/schemas/lineValidationSchema";
 import { formatDate } from "../../utils/formatDateISO";
+import { useTranslation } from "react-i18next";
 
 export type LineModalProps = {
   openModal: boolean;
@@ -91,6 +92,8 @@ const LineModal: FC<LineModalProps> = ({
     updateLine(data);
   };
 
+  const { t } = useTranslation();
+
   return (
     <div>
       <Dialog
@@ -109,7 +112,9 @@ const LineModal: FC<LineModalProps> = ({
             overflow: "hidden",
           }}
         >
-          <DialogTitle>{editLine ? "Редактировать" : "Добавить"}</DialogTitle>
+          <DialogTitle>
+            {editLine ? t("modal.edit") : t("modal.add")}
+          </DialogTitle>
           <DialogContent>
             <Controller
               name="companySigDate"
@@ -117,7 +122,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Дата подписи компании"
+                  label={t("modal.companySigDate")}
                   type="date"
                   slotProps={{
                     inputLabel: {
@@ -137,7 +142,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Наименование"
+                  label={t("modal.companySignatureName")}
                   fullWidth
                   margin="normal"
                   error={!!errors.companySignatureName}
@@ -151,7 +156,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Название документа"
+                  label={t("modal.documentName")}
                   fullWidth
                   margin="normal"
                   error={!!errors.documentName}
@@ -165,7 +170,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Статус документа"
+                  label={t("modal.documentStatus")}
                   fullWidth
                   margin="normal"
                   error={!!errors.documentStatus}
@@ -179,7 +184,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Тип документа"
+                  label={t("modal.documentType")}
                   fullWidth
                   margin="normal"
                   error={!!errors.documentType}
@@ -193,7 +198,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Номер сотрудника"
+                  label={t("modal.employeeNumber")}
                   fullWidth
                   margin="normal"
                   error={!!errors.employeeNumber}
@@ -207,7 +212,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Дата подписи сотрудника"
+                  label={t("modal.employeeSigDate")}
                   type="date"
                   fullWidth
                   margin="normal"
@@ -227,7 +232,7 @@ const LineModal: FC<LineModalProps> = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Название документа"
+                  label={t("modal.employeeSignatureName")}
                   fullWidth
                   margin="normal"
                   error={!!errors.employeeSignatureName}
@@ -250,10 +255,10 @@ const LineModal: FC<LineModalProps> = ({
                 reset();
               }}
             >
-              Отмена
+              {t("modal.cancel")}
             </Button>
             <Button type="submit" color="primary">
-              {editLine ? "Сохранить" : "Добавить"}
+              {editLine ? t("modal.save") : t("modal.add")}
             </Button>
           </DialogActions>
         </form>
