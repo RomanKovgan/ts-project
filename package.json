@@ -9,8 +9,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "rm -rf dist/ && npm run build",
+    "deploy": "gh-pages -d dist",
+    "postdeploy": "cp dist/index.html dist/404.html"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
