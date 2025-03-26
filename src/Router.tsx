@@ -11,7 +11,7 @@ export const Router: FC = () => {
       <Routes>
         <Route path={"/login"} element={<LoginPage />} />
         <Route element={<PrivateOutlet />}>
-          <Route path={"/table"} element={<TablePage />} />
+          <Route path={"/"} element={<TablePage />} />
         </Route>
         <Route path="*" element={<Navigate to={routes.loginPagePath()} />} />
       </Routes>

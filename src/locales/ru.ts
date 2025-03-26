@@ -35,6 +35,14 @@ export default {
       password: "Пароль",
       login: "Войти",
     },
-    erors: {},
+    errors: {
+      defaultError: "Что-то пошло не так!",
+      loginError: "Неверное имя пользователя или пароль",
+    },
+    alerts: {
+      createLine: "Запись добавлена",
+      updateLine: "Данный изменены успешно",
+      deleteLine: "Запись удалена",
+    },
   },
 };

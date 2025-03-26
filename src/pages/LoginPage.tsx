@@ -6,11 +6,10 @@ import { useTranslation } from "react-i18next";
 export const LoginPage: FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login } = useLogin();
   const { t } = useTranslation();
+  const { login } = useLogin(t);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(JSON.stringify({ username, password }));
     login({ username, password });
   };
   return (
