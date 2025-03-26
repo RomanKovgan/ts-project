@@ -9,6 +9,6 @@ export default {
     `${APIPath}/ru/data/v3/testmethods/docs/userdocs/delete/${id}`,
   updateLinePath: (id: string) =>
     `${APIPath}/ru/data/v3/testmethods/docs/userdocs/set/${id}`,
-  tablePagePath: () => "/table",
+  tablePagePath: () => "/",
   loginPagePath: () => "/login",
 };

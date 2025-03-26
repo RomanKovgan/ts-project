@@ -35,6 +35,14 @@ export default {
       password: "Password",
       login: "Log In",
     },
-    erors: {},
+    errors: {
+      defaultError: "Oops, something went wrong!",
+      loginError: "Incorrect username or password",
+    },
+    alerts: {
+      createLine: "Entry added",
+      updateLine: "Data updated successfully",
+      deleteLine: "Entry deleted",
+    },
   },
 };

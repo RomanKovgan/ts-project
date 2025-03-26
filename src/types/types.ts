@@ -13,3 +13,9 @@ export type TableLine = {
 export type TableLinesResponse = {
   data: TableLine[];
 };
+
+export type ErrorResponseType = {
+  errorStatus: number;
+  message: string;
+  errorId: string;
+};
