@@ -31,7 +31,7 @@ export const useLogin = (t: TFunction) => {
     },
     onSuccess(res) {
       if (res.data.error_text === "Access deny") {
-        addAlert(t("errors.loginError"), AlertMode.Error);
+        addAlert(t("alerts.loginError"), AlertMode.Error);
         return;
       }
       localStorage.setItem("token", res.data.data.token);
@@ -39,7 +39,7 @@ export const useLogin = (t: TFunction) => {
     },
     onError: (error: AxiosError<ErrorResponse>): void => {
       console.log(error);
-      addAlert(t("errors.defaultError"), AlertMode.Error);
+      addAlert(t("alerts.defaultError"), AlertMode.Error);
     },
   });
   return { login, isLoadingLogin, isSuccessLogin };

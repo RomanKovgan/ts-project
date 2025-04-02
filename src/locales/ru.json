@@ -1,0 +1,60 @@
+{
+  "translation": {
+    "navbar": {
+      "logout": "Выйти",
+      "header": "Моё приложение",
+      "lang": "Язык"
+    },
+    "modal": {
+      "cancel": "Отмена",
+      "save": "Сохранить",
+      "edit": "Редактировать",
+      "add": "Добавить",
+      "companySigDate": "Дата подписи компании",
+      "companySignatureName": "Наименование",
+      "documentName": "Название документа",
+      "documentStatus": "Статус документа",
+      "documentType": "Тип документа",
+      "employeeNumber": "Номер сотрудника",
+      "employeeSigDate": "Дата подписи сотрудника",
+      "employeeSignatureName": "Название документа"
+    },
+    "table": {
+      "add": "Добавить",
+      "companySigDate": "Дата подписи компании",
+      "companySignatureName": "Наименование",
+      "documentName": "Название документа",
+      "documentStatus": "Статус документа",
+      "documentType": "Тип документа",
+      "employeeNumber": "Номер сотрудника",
+      "employeeSigDate": "Дата подписи сотрудника",
+      "employeeSignatureName": "Название документа"
+    },
+    "login": {
+      "username": "Имя пользователя",
+      "password": "Пароль",
+      "login": "Войти"
+    },
+    "errors": {
+      "validation": {
+        "login": {
+          "username": {
+            "requared": "Имя пользователя обязателено",
+            "min": "Имя пользователя должно содержать минимум {{count}} символа"
+          },
+          "password": {
+            "required": "Пароль обязателен",
+            "min": "Пароль должен содержать минимум {{count}} символов"
+          }
+        }
+      }
+    },
+    "alerts": {
+      "createLine": "Запись добавлена",
+      "updateLine": "Данный изменены успешно",
+      "deleteLine": "Запись удалена",
+      "defaultError": "Что-то пошло не так!",
+      "loginError": "Неверное имя пользователя или пароль"
+    }
+  }
+}

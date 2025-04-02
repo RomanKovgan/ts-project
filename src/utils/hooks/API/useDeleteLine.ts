@@ -24,7 +24,7 @@ export const useDeleteLine = (t: TFunction) => {
         .invalidateQueries({ queryKey: ["allLines"] })
         .then(() => addAlert(t("alerts.deleteLine"), AlertMode.Success)),
     onError: () => {
-      addAlert(t("errors.defaultError"), AlertMode.Error);
+      addAlert(t("alerts.defaultError"), AlertMode.Error);
     },
   });
   return { deleteLine };

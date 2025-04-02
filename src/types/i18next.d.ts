@@ -1,11 +1,10 @@
 import "i18next";
-import translationEn from "../locales/en";
+import en from "../locales/en.json";
+import ru from "../locales/ru.json";
 
+type Resources = typeof en & typeof ru;
 declare module "i18next" {
   interface CustomTypeOptions {
-    resources: typeof translationEn;
-    // Если есть несколько namespaces:
-    // defaultNS: "translation";
-    // ns: ["translation", "common"];
+    resources: Resources;
   }
 }
