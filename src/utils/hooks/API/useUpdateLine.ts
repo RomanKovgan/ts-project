@@ -14,7 +14,7 @@ export const useUpdateLine = (
 ) => {
   const queryClient = useQueryClient();
   const { addAlert } = useContext(AlertContext);
-  const { mutate: updateLine } = useMutation({
+  const { mutate: updateLine, isPending: isUpdatingLine } = useMutation({
     mutationFn: ({ id, ...rest }: TableLine) => {
       return axios.post(
         routes.updateLinePath(id),
@@ -28,8 +28,8 @@ export const useUpdateLine = (
         addAlert(t("alerts.updateLine"), AlertMode.Success);
       }),
     onError: () => {
-      addAlert(t("errors.defaultError"), AlertMode.Error);
+      addAlert(t("alerts.defaultError"), AlertMode.Error);
     },
   });
-  return { updateLine };
+  return { updateLine, isUpdatingLine };
 };

@@ -28,7 +28,7 @@ export const useCreateLine = (
         .then(() => setOpenModal(false))
         .then(() => addAlert(t("alerts.createLine"), AlertMode.Success)),
     onError: () => {
-      addAlert(t("errors.defaultError"), AlertMode.Error);
+      addAlert(t("alerts.defaultError"), AlertMode.Error);
     },
   });
   return { createLine, isLoadingCreatedLines };
