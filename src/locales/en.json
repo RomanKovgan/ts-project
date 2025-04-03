@@ -46,6 +46,16 @@
             "required": "Password is required",
             "min": "Password must be at least {{count}} characters"
           }
+        },
+        "modalLine": {
+          "companySigDate": "Company signing date is required",
+          "companySignatureName": "Company signature name is requared",
+          "documentName": "Document name is requared",
+          "documentStatus": "Document status is requared",
+          "documentType": "Document type is requared",
+          "employeeNumber": "Employee number is requared",
+          "employeeSigDate": "Employee signing date is requared",
+          "employeeSignatureName": "Employee signature name is requared"
         }
       }
     },
