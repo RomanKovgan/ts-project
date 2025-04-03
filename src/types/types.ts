@@ -14,6 +14,8 @@ export type TableLinesResponse = {
   data: TableLine[];
 };
 
+export type FormValues = Omit<TableLine, "id">;
+
 export type ErrorResponseType = {
   errorStatus: number;
   message: string;

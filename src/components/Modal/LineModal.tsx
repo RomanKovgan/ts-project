@@ -7,20 +7,20 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { TableLine } from "../../types/types";
+import { FormValues, TableLine } from "../../types/types";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { lineSchema } from "../../utils/schemas/lineValidationSchema";
+import { useLineSchema } from "../../utils/schemas/lineValidationSchema";
 import { formatDate } from "../../utils/formatDateISO";
 import { useTranslation } from "react-i18next";
-
-export type LineModalProps = {
+type LineModalProps = {
   openModal: boolean;
   editLine: TableLine | null;
   setOpenModal: (value: boolean) => void;
   setEditLine: (value: TableLine | null) => void;
   createLine: (value: Omit<TableLine, "id">) => void;
   updateLine: (value: TableLine) => void;
+  fields: (keyof FormValues)[];
 };
 
 const LineModal: FC<LineModalProps> = ({
@@ -30,14 +30,16 @@ const LineModal: FC<LineModalProps> = ({
   setEditLine,
   createLine,
   updateLine,
+  fields,
 }) => {
+  const schema = useLineSchema();
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(lineSchema),
+    resolver: yupResolver(schema),
     defaultValues: {
       companySigDate: "",
       companySignatureName: "",
@@ -76,7 +78,19 @@ const LineModal: FC<LineModalProps> = ({
     }
   }, [editLine, reset]);
 
-  const onSubmit = (data: Omit<TableLine, "id">) => {
+  useEffect(() => {
+    const firstError = Object.keys(errors)[0];
+    const erEl = document.querySelector(`[data-field=${firstError}]`);
+    if (erEl) {
+      erEl.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      (erEl as HTMLInputElement).focus();
+    }
+  }, [errors]);
+
+  const onSubmit = async (data: Omit<TableLine, "id">) => {
     if (editLine) {
       handleUpdate({ ...data, id: editLine.id });
     } else {
@@ -103,143 +117,46 @@ const LineModal: FC<LineModalProps> = ({
           setEditLine(null);
           reset();
         }}
+        maxWidth="md"
+        fullWidth
       >
         <form
           onSubmit={handleSubmit(onSubmit)}
           style={{
             display: "flex",
             flexDirection: "column",
-            overflow: "hidden",
+            overflow: "auto",
+            maxHeight: "80vh",
           }}
         >
           <DialogTitle>
             {editLine ? t("modal.edit") : t("modal.add")}
           </DialogTitle>
-          <DialogContent>
-            <Controller
-              name="companySigDate"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.companySigDate")}
-                  type="date"
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.companySigDate}
-                  helperText={errors.companySigDate?.message}
-                />
-              )}
-            />
-            <Controller
-              name="companySignatureName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.companySignatureName")}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.companySignatureName}
-                  helperText={errors.companySignatureName?.message}
-                />
-              )}
-            />
-            <Controller
-              name="documentName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.documentName")}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.documentName}
-                  helperText={errors.documentName?.message}
-                />
-              )}
-            />
-            <Controller
-              name="documentStatus"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.documentStatus")}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.documentStatus}
-                  helperText={errors.documentStatus?.message}
-                />
-              )}
-            />
-            <Controller
-              name="documentType"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.documentType")}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.documentType}
-                  helperText={errors.documentType?.message}
-                />
-              )}
-            />
-            <Controller
-              name="employeeNumber"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.employeeNumber")}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.employeeNumber}
-                  helperText={errors.employeeNumber?.message}
-                />
-              )}
-            />
-            <Controller
-              name="employeeSigDate"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.employeeSigDate")}
-                  type="date"
-                  fullWidth
-                  margin="normal"
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  error={!!errors.employeeSigDate}
-                  helperText={errors.employeeSigDate?.message}
-                />
-              )}
-            />
-            <Controller
-              name="employeeSignatureName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("modal.employeeSignatureName")}
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.employeeSignatureName}
-                  helperText={errors.employeeSignatureName?.message}
-                />
-              )}
-            />
+          <DialogContent dividers>
+            {fields.map((fieldName) => (
+              <Controller
+                key={fieldName}
+                name={fieldName}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t(`modal.${fieldName}`)}
+                    data-field={fieldName}
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                    fullWidth
+                    margin="normal"
+                    type={fieldName.includes("Date") ? "date" : "text"}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: fieldName.includes("Date") ? true : undefined,
+                      },
+                    }}
+                  />
+                )}
+              />
+            ))}
           </DialogContent>
           <DialogActions
             sx={{

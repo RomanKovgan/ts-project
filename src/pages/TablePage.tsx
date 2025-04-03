@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useGetTableData } from "../utils/hooks/API/useGetTableData";
 import { Delete, Edit } from "@mui/icons-material";
-import { TableLine } from "../types/types";
+import { FormValues, TableLine } from "../types/types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import LineModal from "../components/Modal/LineModal";
@@ -23,16 +23,29 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import routes from "../utils/routes";
 import { TableSkeleton } from "../components/Skeleton/Skeleton";
+import { useTableHeaderTranslations } from "../utils/hooks/useTableHeaderTranslations";
 
 const TablePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [editLine, setEditLine] = useState<TableLine | null>(null);
+  const [fields, setFields] = useState<(keyof FormValues)[]>([]);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { getTableHeader } = useTableHeaderTranslations();
   const { lines, isLoadingLines } = useGetTableData();
   const { createLine } = useCreateLine(setOpenModal, t);
   const { deleteLine } = useDeleteLine(t);
   const { updateLine } = useUpdateLine(setEditLine, t);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (lines) {
+      const keyRow = Object.keys(lines[0]) as (keyof FormValues)[];
+      const rowsWithoutId = keyRow
+        .filter((item: string) => item !== "id")
+        .sort((a, b) => a.localeCompare(b));
+      setFields(rowsWithoutId);
+    }
+  }, [lines]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -54,71 +67,73 @@ const TablePage = () => {
         {isLoadingLines ? (
           <TableSkeleton />
         ) : (
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t("table.companySigDate")}</TableCell>
-                  <TableCell>{t("table.companySignatureName")}</TableCell>
-                  <TableCell>{t("table.documentName")}</TableCell>
-                  <TableCell>{t("table.documentStatus")}</TableCell>
-                  <TableCell>{t("table.documentType")}</TableCell>
-                  <TableCell>{t("table.employeeNumber")}</TableCell>
-                  <TableCell>{t("table.employeeSigDate")}</TableCell>
-                  <TableCell>{t("table.employeeSignatureName")}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => setOpenModal(true)}
-                    >
-                      {t("table.add")}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {lines?.map((line) => (
-                  <TableRow key={line.id}>
+          lines && (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {fields.map((fieldName) => (
+                      <TableCell key={fieldName}>
+                        {getTableHeader(fieldName)}
+                      </TableCell>
+                    ))}
                     <TableCell>
-                      {format(line.companySigDate, "dd.MM.yyyy")}
-                    </TableCell>
-                    <TableCell>{line.companySignatureName}</TableCell>
-                    <TableCell>{line.documentName}</TableCell>
-                    <TableCell>{line.documentStatus}</TableCell>
-                    <TableCell>{line.documentType}</TableCell>
-                    <TableCell>{line.employeeNumber}</TableCell>
-                    <TableCell>
-                      {format(line.employeeSigDate, "dd.MM.yyyy")}
-                    </TableCell>
-                    <TableCell>{line.employeeSignatureName}</TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={() => {
-                          setEditLine(line);
-                        }}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setOpenModal(true)}
                       >
-                        <Edit />
-                      </IconButton>
-                      <IconButton onClick={() => deleteLine(line.id)}>
-                        <Delete />
-                      </IconButton>
+                        {t("table.add")}
+                      </Button>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {lines.map((line) => (
+                    <TableRow key={line.id}>
+                      {fields.map((fieldName) => {
+                        if (fieldName.includes("SigDate")) {
+                          return (
+                            <TableCell key={`${line.id}-${fieldName}`}>
+                              {format(
+                                line[fieldName as keyof TableLine],
+                                "dd.MM.yyyy"
+                              )}
+                            </TableCell>
+                          );
+                        }
+                        return (
+                          <TableCell key={`${line.id}-${fieldName}`}>
+                            {line[fieldName as keyof TableLine]}
+                          </TableCell>
+                        );
+                      })}
+                      <TableCell>
+                        <IconButton onClick={() => setEditLine(line)}>
+                          <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => deleteLine(line.id)}>
+                          <Delete />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )
         )}
-
-        <LineModal
-          openModal={openModal}
-          setEditLine={setEditLine}
-          setOpenModal={setOpenModal}
-          editLine={editLine}
-          createLine={createLine}
-          updateLine={updateLine}
-        />
+        {fields && (
+          <LineModal
+            openModal={openModal}
+            setEditLine={setEditLine}
+            setOpenModal={setOpenModal}
+            editLine={editLine}
+            createLine={createLine}
+            updateLine={updateLine}
+            fields={fields}
+          />
+        )}
       </div>
     </>
   );
